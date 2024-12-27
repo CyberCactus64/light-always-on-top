@@ -9,4 +9,4 @@ if %ERRORLEVEL% neq 0 (
     exit /b %ERRORLEVEL%
 )
 
-echo You can now run AlwaysOnTop.exe!
+echo You can run AlwaysOnTop.exe now!

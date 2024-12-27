@@ -15,8 +15,8 @@ bool alwaysOnTopActivated = false;
 // this function creates the popup menu from the tray bar menu icon
 void CreateTrayMenu(HWND hwnd) {
     HMENU popupMenu = CreatePopupMenu();
-    AppendMenu(popupMenu, MF_STRING, EXIT_ID, "Exit"); // create "Exit" option
-    AppendMenu(popupMenu, MF_STRING, OPEN_TOOL_MANAGER_ID, "Open Tool Manager"); // create "Open Tool Manager" option
+    AppendMenu(popupMenu, MF_STRING, EXIT_ID, TEXT("Exit")); // create "Exit" option
+    AppendMenu(popupMenu, MF_STRING, OPEN_TOOL_MANAGER_ID, TEXT("Open Tool Manager")); // create "Open Tool Manager" option
 
     // make the "exit" button and the "Open Tool Manager" button clickable
     POINT pt;
@@ -28,12 +28,18 @@ void CreateTrayMenu(HWND hwnd) {
 
 // this function assigns actions to tray bar menu options 
 void HandleTrayMenu(HWND hwnd, WPARAM wParam) {
+    int exit_choice = 0;
     switch (LOWORD(wParam)) {
         case EXIT_ID: // "Exit" button
-            DestroyWindow(hwnd);
+            exit_choice = MessageBox(NULL, TEXT("Do you really want to exit?"), TEXT("Always On Top"), MB_YESNO | MB_ICONQUESTION);
+            if (exit_choice == IDYES) { // Exit? Yes
+                DestroyWindow(hwnd); // kill the application process
+            } else if (exit_choice == IDNO) { // Exit? No
+                MessageBox(NULL, TEXT("Operation cancelled."), TEXT("Always On Top"), MB_OK | MB_ICONINFORMATION);
+            }
             break;
         case OPEN_TOOL_MANAGER_ID: // "Open Tool Manager" button
-            // WILL BE IMPLEMENTED AS SOON AS POSSIBLE
+            MessageBox(NULL, TEXT("Tool Manager will be implemented soon..."), TEXT("Always On Top"), MB_OK | MB_ICONWARNING);
             break;
     }
 }
@@ -49,7 +55,7 @@ LRESULT CALLBACK TraybarIcon(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             icon_data.uCallbackMessage = WM_USER + 1;
 
             // load the icon from the folder /graphics
-            icon_data.hIcon = (HICON)LoadImage(NULL, "Icon\\Traybar_icon.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+            icon_data.hIcon = (HICON)LoadImage(NULL, TEXT("Icon\\Icon.ico"), IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
             if (!Shell_NotifyIcon(NIM_ADD, &icon_data)) {
                 DWORD error = GetLastError();
                 std::cerr << "Error while loading the tray bar menu icon: " << error << std::endl;
@@ -109,6 +115,8 @@ DWORD WINAPI BackgroundThread(LPVOID lpParam) {
 
 // MAIN function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nShowCmd) {
+    MessageBox(NULL, TEXT("Press WIN + CTRL + T to use!\nClick on the Traybar menu icon for Settings or to Exit :)"), TEXT("Always On Top"), MB_OK | MB_ICONINFORMATION);
+
     HANDLE hThread; // to manage the thread
     hThread = CreateThread(NULL, 0, BackgroundThread, NULL, 0, NULL); // create the thread in background (call the function BackgroundThread())
     if (hThread == NULL) {
@@ -120,11 +128,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nShowCmd) {
     WNDCLASS wc = {};
     wc.lpfnWndProc = TraybarIcon; // see LRESULT CALLBACK TraybarIcon()
     wc.hInstance = hInstance;
-    wc.lpszClassName = "TrayWindowClass";
+    wc.lpszClassName = TEXT("TrayWindowClass");
     RegisterClass(&wc);
 
     // place the icon in the traybar menu (creating an invisible window)
-    HWND g_hWnd = CreateWindow(wc.lpszClassName, "Tray Window", 0, 0, 0, 0, 0, nullptr, nullptr, wc.hInstance, nullptr);
+    HWND g_hWnd = CreateWindow(wc.lpszClassName, TEXT("Tray Window"), 0, 0, 0, 0, 0, nullptr, nullptr, wc.hInstance, nullptr);
     if (!g_hWnd) {
         std::cerr << "Unable to create the icon..." << std::endl;
         return 1;

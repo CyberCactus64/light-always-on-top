@@ -13,5 +13,3 @@
  - Add colored borders for the active window
  - When the user clicks on "Exit", every window set as Always on top lose this feature 
  - Simple management application where the user can change stuff like the borders color, shortcuts and exceptions
-
----

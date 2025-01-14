@@ -55,7 +55,7 @@ LRESULT CALLBACK TraybarIcon(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             icon_data.uCallbackMessage = WM_USER + 1;
 
             // load the icon from the folder /graphics
-            icon_data.hIcon = (HICON)LoadImage(NULL, TEXT("Icon\\Icon.ico"), IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+            icon_data.hIcon = (HICON)LoadImage(NULL, TEXT("Graphics\\Icon.ico"), IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
             if (!Shell_NotifyIcon(NIM_ADD, &icon_data)) {
                 DWORD error = GetLastError();
                 std::cerr << "Error while loading the tray bar menu icon: " << error << std::endl;

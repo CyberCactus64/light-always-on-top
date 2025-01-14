@@ -1,8 +1,8 @@
 # Simple and Lightweight alternative to AlwaysOnTop from Powertoys (by Microsoft), written in C++ :)
 
 ### HOW TO RUN:
- - Run `AlwaysOnTop.exe`
- - If you change something, you can easily re-compile the code with: `./Compile.bat`
+ - Go to [Releases](https://github.com/CyberCactus64/light-always-on-top/releases) and download `AlwaysOnTop.exe`
+ - If you prefer to compile the code yourself, use: `./Compile.bat`
 
 #### NB: inside the script compile.bat there are two instructions:
  - ```windres IconSet.rc -O coff -o IconSet.o``` -> **To compile the icon into an object file** (see IconSet.rc for the icon path).

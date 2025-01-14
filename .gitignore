@@ -1,2 +1,9 @@
+# # If you use another editor, add its configuration files/folder here
 .vscode/
 .vs/
+
+# Ignore executable files (release versions)
+*.exe
+
+# Will be generate from Compile.bat
+IconSet.o

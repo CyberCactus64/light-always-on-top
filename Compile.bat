@@ -1,7 +1,9 @@
 @echo off
 
 echo Compilation started...
-g++ Light-AlwaysOnTop.cpp -o "AlwaysOnTop.exe" -mwindows
+
+windres IconSet.rc -O coff -o IconSet.o
+g++ Light-AlwaysOnTop.cpp IconSet.o -o "AlwaysOnTop.exe" -mwindows
 
 :: check if there are errors during compilation
 if %ERRORLEVEL% neq 0 (

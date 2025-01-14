@@ -4,6 +4,10 @@
  - Run `AlwaysOnTop.exe`
  - If you change something, you can easily re-compile the code with: `./Compile.bat`
 
+#### NB: inside the script compile.bat there are two instructions:
+ - ```windres IconSet.rc -O coff -o IconSet.o``` -> **To compile the icon into an object file** (see IconSet.rc for the icon path).
+ - ```g++ Light-AlwaysOnTop.cpp IconSet.o -o "AlwaysOnTop.exe" -mwindows``` -> **To compile the code** and link the icon (from IconSet.o) into the final executable, -mwindows is used to hide the terminal when running the application.
+
 ### HOW TO USE:
  - Press __WIN + CTRL + T__ on the active window to enable/disable Always On Top on it!
 

@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="LightAlwaysOnTop.vcxproj" Id="96b98d3a-78af-425d-b811-8d7222b1347d" />
+</Solution>

@@ -12,16 +12,16 @@ using namespace std;
 #define DWMWA_BORDER_COLOR 34
 #endif
 
-// icon identifier (from resources)
-constexpr auto IDI_APPICON1 = 101;
-
 // tray menu IDs
 constexpr int EXIT_ID = 1001; // "Exit" button ID
 constexpr int OPEN_TOOL_MANAGER_ID = 1002; // "Open Tool Manager" button ID
 constexpr int TOOL_COLOR_BASE_ID = 4000; // base ID for color buttons
 
 NOTIFYICONDATA icon_data = {}; // tray bar icon data
+constexpr auto IDI_APPICON1 = 101; // icon identifier (from resources)
+
 unordered_map<HWND, COLORREF> alwaysOnTopWindows; // map of windows that are Always On Top and their border color
+
 COLORREF currentBorderColor = RGB(0, 200, 0); // default color: green
 
 // border color options
@@ -171,54 +171,50 @@ static void CreateTrayMenu(HWND hwnd) {
 // handle tray menu actions
 static void HandleTrayMenu(HWND hwnd, WPARAM wParam) {
     switch (LOWORD(wParam)) {
-    case EXIT_ID: {
-        int exit_choice = MessageBox(NULL, TEXT("Do you really want to exit?"), TEXT("Always On Top"), MB_YESNO | MB_ICONQUESTION);
-        if (exit_choice == IDYES) DestroyWindow(hwnd);
-        else MessageBox(NULL, TEXT("Operation cancelled."), TEXT("Always On Top"), MB_OK | MB_ICONINFORMATION);
-        break;
-    }
-    case OPEN_TOOL_MANAGER_ID:
-        OpenToolManager(hwnd);
-        break;
+        case EXIT_ID: {
+            int exit_choice = MessageBox(NULL, TEXT("Do you really want to exit?"), TEXT("Always On Top"), MB_YESNO | MB_ICONQUESTION);
+            if (exit_choice == IDYES) DestroyWindow(hwnd);
+            else MessageBox(NULL, TEXT("Operation cancelled."), TEXT("Always On Top"), MB_OK | MB_ICONINFORMATION);
+            break;
+        }
+        case OPEN_TOOL_MANAGER_ID: {
+            OpenToolManager(hwnd);
+            break;
+        }
     }
 }
 
 // tray icon window procedure
 static LRESULT CALLBACK TraybarIcon(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
-    case WM_CREATE:
-        // set up the tray icon
-        icon_data.cbSize = sizeof(NOTIFYICONDATA);
-        icon_data.hWnd = hwnd;
-        icon_data.uID = 1;
-        icon_data.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-        icon_data.uCallbackMessage = WM_USER + 1;
-        // icon_data.hIcon = (HICON)LoadImage(NULL, TEXT("Graphics\\Icon.ico"), IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
-        icon_data.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_APPICON1)); // load icon from resources
+        case WM_CREATE:
+            // set up the tray icon
+            icon_data.cbSize = sizeof(NOTIFYICONDATA);
+            icon_data.hWnd = hwnd;
+            icon_data.uID = 1;
+            icon_data.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+            icon_data.uCallbackMessage = WM_USER + 1;
+            icon_data.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_APPICON1)); // load icon from resources
 
-        if (!Shell_NotifyIcon(NIM_ADD, &icon_data))
-            cerr << "Error while loading the tray icon: " << GetLastError() << endl;
-        break;
-
-    case WM_USER + 1:
-        // if right click on tray icon, show menu
-        if (lParam == WM_RBUTTONDOWN || lParam == WM_CONTEXTMENU)
-            CreateTrayMenu(hwnd);
-        break;
-
-    case WM_COMMAND:
-        // handle menu actions
-        HandleTrayMenu(hwnd, wParam);
-        break;
-
-    case WM_DESTROY:
-        // remove tray icon on exit
-        Shell_NotifyIcon(NIM_DELETE, &icon_data);
-        PostQuitMessage(0);
-        break;
-
-    default:
-        return DefWindowProc(hwnd, msg, wParam, lParam);
+            if (!Shell_NotifyIcon(NIM_ADD, &icon_data))
+                cerr << "Error while loading the tray icon: " << GetLastError() << endl;
+            break;
+        case WM_USER + 1:
+            // if right click on tray icon, show menu
+            if (lParam == WM_RBUTTONDOWN || lParam == WM_CONTEXTMENU)
+                CreateTrayMenu(hwnd);
+            break;
+        case WM_COMMAND:
+            // handle menu actions
+            HandleTrayMenu(hwnd, wParam);
+            break;
+        case WM_DESTROY:
+            // remove tray icon on exit
+            Shell_NotifyIcon(NIM_DELETE, &icon_data);
+            PostQuitMessage(0);
+            break;
+        default:
+            return DefWindowProc(hwnd, msg, wParam, lParam);
     }
     return 0;
 }

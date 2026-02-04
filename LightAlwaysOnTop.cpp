@@ -75,7 +75,7 @@ static void ToggleWindowAlwaysOnTop(HWND hwnd) {
 // tool manager procedure
 static LRESULT CALLBACK ToolManagerProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
-        case WM_CREATE: {
+        case WM_CREATE:
             int btnWidth = 80;
             int btnHeight = 25;
             int spacing = 10;
@@ -103,8 +103,7 @@ static LRESULT CALLBACK ToolManagerProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
                     x, y, btnWidth, btnHeight, hwnd, (HMENU)(UINT_PTR)(TOOL_COLOR_BASE_ID + i), NULL, NULL);
             }
             break;
-        }
-        case WM_COMMAND: {
+        case WM_COMMAND:
             int id = LOWORD(wParam);
             if (id >= TOOL_COLOR_BASE_ID && id < TOOL_COLOR_BASE_ID + 10) {
                 int index = id - TOOL_COLOR_BASE_ID;
@@ -115,17 +114,13 @@ static LRESULT CALLBACK ToolManagerProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
                     SetAlwaysOnTopBorder(pair.first, true, currentBorderColor);
             }
             break;
-        }
-        case WM_CLOSE: {
+        case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
-        }
-        case WM_DESTROY: {
+        case WM_DESTROY:
             break;
-        }
-        default: {
+        default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
-        }
     }
     return 0;
 }
@@ -272,4 +267,5 @@ int WINAPI WinMain(
     }
 
     return 0;
+
 }

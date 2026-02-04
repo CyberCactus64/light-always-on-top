@@ -11,10 +11,24 @@ LightAlwaysOnTop/
 
 # files to exclude
 *.exe
+*.out
+*.app
+*.dwo
+*.so
+*.dylib
 *.dll
+*.lai
+*.la
+*.a
 *.lib
+*.gch
+*.pch
 *.pdb
 *.obj
+*.slo
+*.lo
+*.o
+*.d
 *.ilk
 *.idb
 *.exp
